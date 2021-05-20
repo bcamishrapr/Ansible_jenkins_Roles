@@ -1,0 +1,6 @@
+---
+# vars file for jenkins
+jenkins_repo_url: https://pkg.jenkins.io/redhat-stable/jenkins.repo 
+jenkins_repo_dst: /etc/yum.repos.d/jenkins.repo
+jenkins_key:  https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+

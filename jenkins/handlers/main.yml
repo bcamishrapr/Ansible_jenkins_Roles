@@ -1,0 +1,25 @@
+---
+# handlers file for jenkins
+- name: Start & Enable Jenkins
+  systemd:
+    name: jenkins
+    state: started
+    enabled: true
+
+- name: Get init password Jenkins
+  shell: cat /var/lib/jenkins/secrets/initialAdminPassword
+  changed_when: false
+  no_log: true
+  register: result
+  listen: Handler-Restart
+
+- name: Providing Password to the Users
+  debug:
+        var: result.stdout
+  listen: Handler-Restart 
+
+- name: Providing Greeting to the Remote Hosts
+  copy:
+    src: final-greeting.txt
+    dest: /root/final-greeting.txt
+  listen: Start & Enable Jenkins

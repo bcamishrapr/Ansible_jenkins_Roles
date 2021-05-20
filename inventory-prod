@@ -1,0 +1,9 @@
+nagios ansible_host=192.168.33.15 
+
+## Group of nagios user
+[nagios1]
+nagios
+
+## Varibale of nagios1 Group
+[nagios1:vars]
+ansible_user=admin

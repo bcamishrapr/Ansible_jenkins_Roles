@@ -1,0 +1,4 @@
+- hosts: nagios
+  become: true
+  roles:
+     - role: jenkins

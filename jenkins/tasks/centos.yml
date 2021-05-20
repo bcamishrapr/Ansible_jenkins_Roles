@@ -1,0 +1,50 @@
+
+---
+    
+    - name: Setting Fact for timeout for calling variable in name field
+      set_fact:
+         timeout: "{{timeout_value}}"
+ 
+    - name: Installing Wget and open-jdk
+      yum:
+        name:
+          - wget
+          - java-1.8.0-openjdk
+          - "{{ 'libselinux-python' if ansible_python['version']['major'] < 3 else 'python3-libselinux' }}"
+        state: present
+
+    - name: Download jenkins.repo
+      get_url:
+        url: "{{jenkins_repo_url}}"
+        dest: "{{jenkins_repo_dst}}"
+      when: jenkins_repo_url | default(false)
+      tags:
+         - configuration
+
+    - name: Import Jenkins Key
+      rpm_key:
+        state: present
+        key: "{{jenkins_key}}"
+      when: jenkins_repo_url | default(false)
+
+    - name: Installing Jenkins
+      yum:
+        name: jenkins
+        state: present
+      notify: Start & Enable Jenkins
+      tags:
+         - Jenkins_install
+
+
+    - name: Sleep for {{timeout}} seconds and continue with play
+      wait_for: timeout="{{timeout_value}}"
+   
+    - name: trigger Handler-restart
+      command: /bin/true
+      notify: Handler-Restart
+   
+#    - debug: msg="trigger nginx-restart"
+#      notify: Handler-Restart
+#      changed_when: true
+    
+
